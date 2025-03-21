@@ -1,9 +1,11 @@
-// ignore_for_file: unused_local_variable
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:project/pages/home_page.dart';
+import 'package:project/services/auth_service.dart';
 import 'package:project/widgets/custom_button.dart';
 import 'package:project/widgets/custom_text_field.dart';
+// ignore_for_file: unused_local_variable
 
 class AuthenPage extends StatefulWidget {
   const AuthenPage({super.key});
@@ -15,6 +17,42 @@ class AuthenPage extends StatefulWidget {
 class _AuthenPageState extends State<AuthenPage> {
   late Widget _widget;
   late String _header;
+
+  final TextEditingController _signInEmailController = TextEditingController();
+  final TextEditingController _signInPasswordController =
+      TextEditingController();
+
+  Future<void> _login() async {
+    try {
+      print('Email: ${_signInEmailController.text}');
+      print('Password: ${_signInPasswordController.text}');
+      final response = await http.post(
+        Uri.parse('https://thingsboard.cloud/api/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': _signInEmailController.text,
+          'password': _signInPasswordController.text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        final token = responseData['token'];
+        final refreshToken = responseData['refreshToken'];
+        await AuthService().saveTokens(token, refreshToken);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomePage()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Đăng nhập thất bại. Vui lòng thử lại.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Có lỗi xảy ra. Vui lòng thử lại sau.')),
+      );
+    }
+  }
 
   Widget _buildWelcomeWidget() {
     _header = 'Welcome';
@@ -51,20 +89,19 @@ class _AuthenPageState extends State<AuthenPage> {
         CustomTextField(
           hintText: 'Email',
           assetPath: 'assets/email.png',
+          controller: _signInEmailController,
         ),
         CustomTextField(
           hintText: 'Password',
           assetPath: 'assets/lock.png',
           obscureText: true,
+          controller: _signInPasswordController,
         ),
         CustomButton(
           text: 'Sign In',
           backgroundColor: Colors.transparent,
           foregroundColor: Color(0xFF1042BF),
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
-          },
+          onPressed: _login,
         ),
         CustomButton(
           text: 'Sign In With Google',
@@ -119,11 +156,13 @@ class _AuthenPageState extends State<AuthenPage> {
         CustomTextField(
           hintText: 'Email',
           assetPath: 'assets/email.png',
+          controller: _signInEmailController,
         ),
         CustomTextField(
           hintText: 'Password',
           assetPath: 'assets/lock.png',
           obscureText: true,
+          controller: _signInPasswordController,
         ),
         CustomTextField(
           hintText: 'Confirm Password',
@@ -172,6 +211,8 @@ class _AuthenPageState extends State<AuthenPage> {
   @override
   void initState() {
     super.initState();
+    _signInEmailController.text = '';
+    _signInPasswordController.text = '';
     _widget = _buildWelcomeWidget();
   }
 

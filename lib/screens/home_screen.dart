@@ -1,7 +1,7 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:project/data_test/weather_test.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:project/model/weather.dart';
+import 'package:project/data_test/weather_test.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -64,7 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
           borderData: FlBorderData(show: false),
           lineBarsData: [
             LineChartBarData(
-              spots: List.generate([18, 19, 24, 25, 26].length, (index) => FlSpot(index.toDouble(), [18.0, 19.0, 24.0, 25.0, 26.0][index])),
+              spots: List.generate(
+                  [18, 19, 24, 25, 26].length,
+                  (index) => FlSpot(
+                      index.toDouble(), [18.0, 19.0, 24.0, 25.0, 26.0][index])),
               isCurved: true,
               gradient: LinearGradient(
                 colors: [Colors.blue, Colors.orange],
@@ -82,54 +85,60 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildWeatherList() {
     return SizedBox(
       height: 150,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: _list.asMap().entries.map((entry) {
-          int index = entry.key;
-          WeatherModel weather = entry.value;
-          bool isSelected = index == _index;
-          String time = weather.time <= 12 ? '${weather.time}AM' : '${weather.time - 12}PM';
-          String temperature = '${weather.temperature.toStringAsFixed(0)}°';
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _index = index;
-              });
-            },
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              margin: EdgeInsets.symmetric(horizontal: 5),
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.grey.shade300 : Colors.transparent,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: _list.asMap().entries.map((entry) {
+            int index = entry.key;
+            WeatherModel weather = entry.value;
+            bool isSelected = index == _index;
+            String time = weather.time <= 12
+                ? '${weather.time}AM'
+                : '${weather.time - 12}PM';
+            String temperature = '${weather.temperature.toStringAsFixed(0)}°';
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _index = index;
+                });
+              },
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                margin: EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
                   color: isSelected ? Colors.grey.shade300 : Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color:
+                        isSelected ? Colors.grey.shade300 : Colors.transparent,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      time,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(height: 5),
+                    Image.asset(
+                      weather.icon,
+                      height: 36,
+                      width: 36,
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      temperature,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    time,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  SizedBox(height: 5),
-                  Image.asset(
-                    weather.icon,
-                    height: 36,
-                    width: 36,
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    temperature,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }

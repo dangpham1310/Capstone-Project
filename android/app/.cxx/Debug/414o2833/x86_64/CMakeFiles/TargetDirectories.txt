@@ -1,0 +1,2 @@
+D:/DoAn/datn/project/android/app/.cxx/Debug/414o2833/x86_64/CMakeFiles/edit_cache.dir
+D:/DoAn/datn/project/android/app/.cxx/Debug/414o2833/x86_64/CMakeFiles/rebuild_cache.dir

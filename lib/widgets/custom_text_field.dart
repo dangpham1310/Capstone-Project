@@ -4,12 +4,14 @@ class CustomTextField extends StatelessWidget {
   final String hintText;
   final String assetPath;
   final bool obscureText;
+  final TextEditingController? controller;
 
   const CustomTextField({
     super.key,
     required this.hintText,
     required this.assetPath,
     this.obscureText = false,
+    this.controller,
   });
 
   @override
@@ -17,6 +19,7 @@ class CustomTextField extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 60),
       child: TextFormField(
+        controller: controller,
         obscureText: obscureText,
         style: TextStyle(
           color: Colors.black,

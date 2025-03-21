@@ -126,17 +126,17 @@ class _ChangeSchedulePageState extends State<ChangeSchedulePage> {
                     value: widget.scheduleModel.description,
                     onTap: () {},
                   ),
-                  Divider(),
-                  ScheduleOptionRow(
-                    title: 'Âm thanh',
-                    value: 'Hướng tâm',
-                    onTap: () {},
-                  ),
+                  // Divider(),
+                  // ScheduleOptionRow(
+                  //   title: 'Âm thanh',
+                  //   value: 'Hướng tâm',
+                  //   onTap: () {},
+                  // ),
                   Divider(),
                   Row(
                     children: [
                       Text(
-                        'Báo lại',
+                        'Tưới Lại',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

@@ -1,8 +1,8 @@
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:project/screens/history_screen.dart';
 import 'package:project/screens/home_screen.dart';
+import 'package:project/screens/history_screen.dart';
 import 'package:project/screens/list_station_screen.dart';
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,13 +28,19 @@ class _HomePageState extends State<HomePage> {
       ('Tài Khoản', 'assets/solid_people.png'),
     ];
 
-    _screens = [HomeScreen(), ListStationScreen(), HistoryScreen(), Container()];
+    _screens = [
+      HomeScreen(),
+      ListStationScreen(),
+      HistoryScreen(),
+      Container()
+    ];
   }
 
   AppBar _buildAppBar() {
     return AppBar(
       title: Text(_list[_bottomNavIndex].$1),
       centerTitle: true,
+      automaticallyImplyLeading: false,
     );
   }
 
