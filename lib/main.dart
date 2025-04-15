@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:project/core/di.dart';
 import 'package:project/pages/home_page.dart';
 import 'package:project/pages/authen_page.dart';
 import 'package:project/services/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DependencyInjections().dependencies();
   await AuthService().init();
   runApp(const MainApp());
 }
