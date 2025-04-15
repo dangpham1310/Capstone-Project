@@ -15,37 +15,13 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = AuthService();
-    final token = authService.getToken();
+    final apiKey = authService.getApiKey();
 
-    if (token != null) {
-      if (authService.isTokenValid()) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: const HomePage(),
-        );
-      } else {
-        return FutureBuilder<bool>(
-          future: authService.refreshTokenIfNeeded(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const MaterialApp(
-                debugShowCheckedModeBanner: false,
-                home: Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-              );
-            }
-
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              home:
-                  snapshot.data == true ? const HomePage() : const AuthenPage(),
-            );
-          },
-        );
-      }
+    if (apiKey != null) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const HomePage(),
+      );
     }
 
     return const MaterialApp(

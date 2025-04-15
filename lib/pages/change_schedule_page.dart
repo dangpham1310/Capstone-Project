@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/model/schedule.dart';
-import 'package:project/pages/repeat_schedule_page.dart';
 import 'package:wheel_picker/wheel_picker.dart';
+import 'package:project/pages/repeat_schedule_page.dart';
 import 'package:project/widgets/schedule_option_row.dart';
 
 class ChangeSchedulePage extends StatefulWidget {
@@ -21,8 +21,10 @@ class _ChangeSchedulePageState extends State<ChangeSchedulePage> {
   @override
   void initState() {
     super.initState();
-    _hourController = WheelPickerController(itemCount: 23, initialIndex: widget.scheduleModel.timeOfDay.hour - 1);
-    _minuteController = WheelPickerController(itemCount: 59, initialIndex: widget.scheduleModel.timeOfDay.minute - 1);
+    _hourController = WheelPickerController(
+        itemCount: 23, initialIndex: widget.scheduleModel.timeOfDay.hour - 1);
+    _minuteController = WheelPickerController(
+        itemCount: 59, initialIndex: widget.scheduleModel.timeOfDay.minute - 1);
     isRepeat = widget.scheduleModel.isRepat;
   }
 
@@ -30,35 +32,69 @@ class _ChangeSchedulePageState extends State<ChangeSchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sửa Scheduler'),
+        title: const Text(
+          'Sửa Scheduler',
+          style: TextStyle(
+            fontSize: 21,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
         centerTitle: true,
-        leading: IconButton(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+            ),
+          ),
+        ),
+        elevation: 4,
+        shadowColor: Colors.black26,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(15),
+          ),
+        ),
+        leading: TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Text(
+          child: Text(
             'Hủy',
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
             ),
           ),
         ),
         actions: [
-          IconButton(
+          TextButton(
             onPressed: () {
-              if (widget.scheduleModel.timeOfDay.hour == _hourController.selected && widget.scheduleModel.timeOfDay.minute == _minuteController.selected) {
+              if (widget.scheduleModel.timeOfDay.hour ==
+                      _hourController.selected &&
+                  widget.scheduleModel.timeOfDay.minute ==
+                      _minuteController.selected) {
                 Navigator.pop(context);
               } else {
-                TimeOfDay(hour: _hourController.selected, minute: _minuteController.selected);
-                Navigator.pop(context, TimeOfDay(hour: _hourController.selected + 1, minute: _minuteController.selected + 1));
+                TimeOfDay(
+                    hour: _hourController.selected,
+                    minute: _minuteController.selected);
+                Navigator.pop(
+                    context,
+                    TimeOfDay(
+                        hour: _hourController.selected + 1,
+                        minute: _minuteController.selected + 1));
               }
             },
-            icon: Text(
+            child: Text(
               'Lưu',
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
               ),
             ),
           ),

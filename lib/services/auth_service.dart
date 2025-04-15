@@ -7,6 +7,7 @@ class AuthService {
   static const String _refreshTokenKey = 'refreshToken';
   static const String _tokenExpiryKey = 'tokenExpiry';
   static const String _baseUrl = 'https://thingsboard.cloud/api';
+  static const String _apiKeyKey = 'apiKey';
   static final AuthService _instance = AuthService._internal();
   static SharedPreferences? _prefs;
 
@@ -89,5 +90,17 @@ class AuthService {
   Future<void> clearTokens() async {
     await _prefs?.remove(_tokenKey);
     await _prefs?.remove(_refreshTokenKey);
+  }
+
+  Future<void> saveApiKey(String apiKey) async {
+    await _prefs?.setString(_apiKeyKey, apiKey);
+  }
+
+  String? getApiKey() {
+    return _prefs?.getString(_apiKeyKey);
+  }
+
+  Future<void> clearApiKey() async {
+    await _prefs?.remove(_apiKeyKey);
   }
 }

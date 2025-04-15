@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project/data_test/history_test.dart';
 import 'package:project/model/history.dart';
+import 'package:project/data_test/history_test.dart';
 import 'package:project/widgets/history_weather_detail.dart';
 
 class HistoryScreen extends StatelessWidget {

@@ -17,36 +17,21 @@ class AuthenPage extends StatefulWidget {
 class _AuthenPageState extends State<AuthenPage> {
   late Widget _widget;
   late String _header;
-
-  final TextEditingController _signInEmailController = TextEditingController();
-  final TextEditingController _signInPasswordController =
-      TextEditingController();
+  final TextEditingController _apiKeyController = TextEditingController();
 
   Future<void> _login() async {
     try {
-      print('Email: ${_signInEmailController.text}');
-      print('Password: ${_signInPasswordController.text}');
-      final response = await http.post(
-        Uri.parse('https://thingsboard.cloud/api/auth/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'username': _signInEmailController.text,
-          'password': _signInPasswordController.text,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        final token = responseData['token'];
-        final refreshToken = responseData['refreshToken'];
-        await AuthService().saveTokens(token, refreshToken);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
-      } else {
+      if (_apiKeyController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đăng nhập thất bại. Vui lòng thử lại.')),
+          SnackBar(content: Text('Vui lòng nhập API key')),
         );
+        return;
       }
+
+      // Lưu API key và chuyển đến trang chủ
+      await AuthService().saveApiKey(_apiKeyController.text);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Có lỗi xảy ra. Vui lòng thử lại sau.')),
@@ -67,16 +52,6 @@ class _AuthenPageState extends State<AuthenPage> {
             _widget = _buildSignInWidget();
           }),
         ),
-        const SizedBox(height: 20),
-        CustomButton(
-          text: 'Sign Up',
-          backgroundColor: Color(0xFF1042BF),
-          foregroundColor: Colors.white,
-          onPressed: () => setState(() {
-            _widget = _buildSignupWidget();
-          }),
-          fontWeight: FontWeight.w400,
-        ),
       ],
     );
   }
@@ -86,123 +61,51 @@ class _AuthenPageState extends State<AuthenPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        CustomTextField(
-          hintText: 'Email',
-          assetPath: 'assets/email.png',
-          controller: _signInEmailController,
-        ),
-        CustomTextField(
-          hintText: 'Password',
-          assetPath: 'assets/lock.png',
-          obscureText: true,
-          controller: _signInPasswordController,
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 60),
+          child: TextFormField(
+            controller: _apiKeyController,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'Bai Jamjuree',
+              fontWeight: FontWeight.w400,
+            ),
+            decoration: InputDecoration(
+              hintText: 'APIKEY',
+              hintStyle: TextStyle(
+                color: Color(0xFF1042BF).withAlpha(51),
+                fontSize: 20,
+                fontFamily: 'Bai Jamjuree',
+                fontWeight: FontWeight.w400,
+              ),
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xFF1042BF),
+                  width: 2,
+                ),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xFF1042BF),
+                  width: 2,
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xFF1042BF),
+                  width: 2,
+                ),
+              ),
+            ),
+          ),
         ),
         CustomButton(
-          text: 'Sign In',
-          backgroundColor: Colors.transparent,
-          foregroundColor: Color(0xFF1042BF),
+          text: 'Connect',
+          backgroundColor: Color(0xFF1042BF),
+          foregroundColor: Colors.white,
           onPressed: _login,
-        ),
-        CustomButton(
-          text: 'Sign In With Google',
-          backgroundColor: Color(0xFF1042BF),
-          foregroundColor: Colors.white,
-          onPressed: () {},
-          icon: Image.asset("assets/google.png"),
-          fontSize: 18,
           fontWeight: FontWeight.w400,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Don’t have an account? ',
-              style: TextStyle(
-                fontSize: 14,
-                fontFamily: 'Bai Jamjuree',
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF000000).withAlpha(70),
-              ),
-            ),
-            InkWell(
-              onTap: () => setState(() {
-                _widget = _buildSignupWidget();
-              }),
-              child: Text(
-                'Sign up',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Bai Jamjuree',
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1042BF),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSignupWidget() {
-    _header = 'Create Account';
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        CustomTextField(
-          hintText: 'Full Name',
-          assetPath: 'assets/profile.png',
-        ),
-        CustomTextField(
-          hintText: 'Email',
-          assetPath: 'assets/email.png',
-          controller: _signInEmailController,
-        ),
-        CustomTextField(
-          hintText: 'Password',
-          assetPath: 'assets/lock.png',
-          obscureText: true,
-          controller: _signInPasswordController,
-        ),
-        CustomTextField(
-          hintText: 'Confirm Password',
-          assetPath: 'assets/lock.png',
-          obscureText: true,
-        ),
-        CustomButton(
-          text: 'Sign Up',
-          backgroundColor: Color(0xFF1042BF),
-          foregroundColor: Colors.white,
-          onPressed: () {},
-          fontWeight: FontWeight.w400,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Already have an account? ',
-              style: TextStyle(
-                fontSize: 14,
-                fontFamily: 'Bai Jamjuree',
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF000000).withAlpha(70),
-              ),
-            ),
-            InkWell(
-              onTap: () => setState(() {
-                _widget = _buildSignInWidget();
-              }),
-              child: Text(
-                'Sign In',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Bai Jamjuree',
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1042BF),
-                ),
-              ),
-            ),
-          ],
         ),
       ],
     );
@@ -211,8 +114,7 @@ class _AuthenPageState extends State<AuthenPage> {
   @override
   void initState() {
     super.initState();
-    _signInEmailController.text = '';
-    _signInPasswordController.text = '';
+    _apiKeyController.text = '';
     _widget = _buildWelcomeWidget();
   }
 

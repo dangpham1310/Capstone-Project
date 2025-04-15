@@ -1,10 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:project/model/device.dart';
-import 'package:project/model/schedule.dart';
-import 'package:project/pages/change_schedule_page.dart';
-import 'package:project/widgets/schedule_list_item.dart';
 
 class DevicePage extends StatelessWidget {
   const DevicePage({super.key, required this.deviceModel});
@@ -22,61 +17,125 @@ class DevicePage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChangeSchedulePage(
-                  scheduleModel: ScheduleModel(
-                    description: '',
-                    timeOfDay: TimeOfDay.now(),
-                    isDone: false,
-                    isRepat: true,
+        backgroundColor: Color(0xFF1387DA),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1387DA).withOpacity(0.1),
+              Colors.white,
+            ],
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              shadowColor: Color(0xFF1387DA).withOpacity(0.3),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white,
+                      Color(0xFF1387DA).withOpacity(0.1),
+                    ],
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.device_hub,
+                            size: 30,
+                            color: Color(0xFF1387DA),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            'Thông tin thiết bị',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1387DA),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      _buildInfoRow('ID', deviceModel.id.toString()),
+                      _buildInfoRow(
+                          'Client ID', deviceModel.clientId.toString()),
+                      _buildInfoRow('Tên', deviceModel.name),
+                      _buildInfoRow('Mô tả', deviceModel.description),
+                      _buildInfoRow('Ngày tạo', deviceModel.createdAt),
+                      _buildInfoRow('Lần hoạt động cuối',
+                          deviceModel.lastSeen ?? 'Chưa hoạt động'),
+                    ],
                   ),
                 ),
               ),
             ),
-            icon: Image.asset('assets/add.png'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: Offset(0, 2),
           ),
         ],
       ),
-      body: Container(
-        padding: EdgeInsets.all(10),
-        child: ListView.separated(
-          itemBuilder: (context, index) {
-            ScheduleModel schedule = deviceModel.schedules![index];
-            return ScheduleListItem(
-              schedule: schedule,
-              onTap: () {
-                final Completer<TimeOfDay?> completer = Completer();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChangeSchedulePage(
-                      scheduleModel: schedule,
-                    ),
-                  ),
-                ).then((value) {
-                  if (value != null) {
-                    final newValue = value as TimeOfDay;
-                    schedule = deviceModel.schedules![index].copyWith(
-                      timeOfDay: newValue,
-                    );
-                    completer.complete(newValue);
-                  } else {
-                    completer.complete(null);
-                  }
-                });
-                return completer.future;
-              },
-            );
-          },
-          separatorBuilder: (context, index) {
-            return const Divider();
-          },
-          itemCount: deviceModel.schedules?.length ?? 0,
-        ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 120,
+            padding: EdgeInsets.only(right: 10),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1387DA),
+                fontSize: 16,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
