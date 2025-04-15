@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart' as GET;
 import 'package:curl_logger_dio_interceptor/curl_logger_dio_interceptor.dart';
 import 'package:project/constants/app_data.dart';
+import 'package:project/data/capstone_datasource.dart';
 import 'package:project/data/services/capstone_service.dart';
 
 class DependencyInjections implements GET.Bindings {
@@ -11,7 +12,8 @@ class DependencyInjections implements GET.Bindings {
   Future<void> dependencies() async {
     final sharedRef = await GET.Get.putAsync(_encryptedSharedPreferences);
     final dio = await GET.Get.putAsync(() => _dio(sharedRef));
-    GET.Get.put(CapstoneService(dio));
+    final captionService = GET.Get.put(CapstoneService(dio));
+    GET.Get.put(CapstoneDataSources(captionService));
   }
 
   Future<Dio> _dio(EncryptedSharedPreferences sharedPref) async {
