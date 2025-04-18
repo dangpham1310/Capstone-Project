@@ -27,7 +27,7 @@ class DependencyInjections implements GET.Bindings {
       String apiKey = sharedPref.getString(AppData.apiKey) ?? "";
       options.headers = {
         "Access-Control-Allow-Origin": "*",
-        "api_key": apiKey,
+        "X-API-Key": apiKey,
         ...options.headers
       };
     }, onError: (error, handler) {
@@ -39,6 +39,7 @@ class DependencyInjections implements GET.Bindings {
   }
 
   Future<EncryptedSharedPreferences> _encryptedSharedPreferences() async {
+    await EncryptedSharedPreferences.initialize(AppData.encryptKey);
     var sharedPref = EncryptedSharedPreferences.getInstance();
     return sharedPref;
   }
