@@ -7,21 +7,13 @@ import 'package:project/constants/app_data.dart';
 class AppUtils {
   AppUtils._();
 
-  static void saveApiKey(String apiKey) {
+  static Future<void> saveApiKey(String apiKey) async {
     final sharedRef = Get.find<EncryptedSharedPreferences>();
-    sharedRef.setString(AppData.apiKey, apiKey);
+    await sharedRef.setString(AppData.apiKey, apiKey);
   }
 
   static bool isAuthenticated() {
     final sharedRef = Get.find<EncryptedSharedPreferences>();
-    return sharedRef.getBool(AppData.apiKey) ?? false;
-  }
-
-  static String generateKey() {
-    const chars =
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    final rand = Random.secure();
-    return List.generate(16, (index) => chars[rand.nextInt(chars.length)])
-        .join();
+    return sharedRef.getString(AppData.apiKey) != null;
   }
 }

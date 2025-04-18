@@ -17,7 +17,7 @@ abstract class CapstoneDataSources {
   Future<List<Devices>?> getDevices();
   Future<List<TelemetryData>?> getTelemetryData();
 
-  void saveApiKey(String apiKey);
+  Future<void> saveApiKey(String apiKey);
 }
 
 class _CapstoneDataSourceImpl implements CapstoneDataSources {
@@ -47,5 +47,5 @@ class _CapstoneDataSourceImpl implements CapstoneDataSources {
       await _capstoneService.postPublishData(body: body);
 
   @override
-  void saveApiKey(String apiKey) => AppUtils.saveApiKey(apiKey);
+  Future<void> saveApiKey(String apiKey) async => AppUtils.saveApiKey(apiKey);
 }

@@ -8,7 +8,7 @@ class AuthenticationLogic extends GetxController {
   final dataSource = Get.find<CapstoneDataSources>();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  void connect(String apiKey) {
+  Future<void> connect(String apiKey) async {
     print(">>>>>>>apiKey: $apiKey");
     print(">>>>>>>default: ${AppData.apiKeyDefault}");
     if (formKey.currentState?.validate() == true) {
@@ -20,7 +20,7 @@ class AuthenticationLogic extends GetxController {
         );
         return;
       }
-      dataSource.saveApiKey(apiKey);
+      await dataSource.saveApiKey(apiKey);
       Get.to(HomePage());
     }
   }

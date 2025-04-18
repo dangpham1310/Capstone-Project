@@ -23,6 +23,7 @@ class App extends StatelessWidget {
     final authService = AuthService();
     final apiKey = authService.getApiKey();
     final isAuthenticated = AppUtils.isAuthenticated();
+    print(">>>>>>isAuthenticated: $isAuthenticated");
 
     return GetMaterialApp(
       defaultTransition: Transition.fade,
