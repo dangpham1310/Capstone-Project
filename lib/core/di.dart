@@ -39,6 +39,7 @@ class DependencyInjections implements GET.Bindings {
   }
 
   Future<EncryptedSharedPreferences> _encryptedSharedPreferences() async {
+    await EncryptedSharedPreferences.initialize(AppData.encryptKey);
     var sharedPref = EncryptedSharedPreferences.getInstance();
     return sharedPref;
   }
